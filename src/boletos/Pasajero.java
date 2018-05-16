@@ -10,20 +10,20 @@ package boletos;
  * @author Desarrollo
  */
 public class Pasajero {
+    public String p_identification;
     public String p_name;
     public String p_type;
+    public String p_edad;
     
-    public Pasajero( String nameP, String typeP){
+    Pasajero( String nameP, String typeP,String identificacionP,String edadP){
+            p_identification = identificacionP;
             p_name = nameP;
             p_type = typeP;
-    }
-
-    Pasajero() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            p_edad = edadP;
     }
     
     @Override
     public String toString() {
-        return p_name + ":" + p_type;
+        return p_identification + ":" + p_name + ":" +  p_type + ":" + p_edad;
     }
 }
