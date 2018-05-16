@@ -34,6 +34,18 @@ public class Data extends Vector {
         return o;
     }
 
+    boolean removeRowAt(Object objTodelete) {
+        return removeElement(objTodelete);
+    }
+
+    Object getAt(int index) {
+        return elementAt(index);
+    }
+    
+    void setRowAt(Object objSet,int index) {
+        setElementAt(objSet, index);
+    }
+
     Object peek() {
         if (isEmpty()) {
             return null;
@@ -41,34 +53,3 @@ public class Data extends Vector {
         return firstElement();
     }
 }
-
-//Boletos boletosList;
-//
-//        boletosList = new Boletos();
-//        boletosList.put("element 1");
-//        boletosList.put("element 2");
-//        boletosList.put("element 3");
-//        boletosList.put("element 4");
-//        System.out.println(boletosList.toString());
-//
-//        // serialize the Queue
-//        System.out.println("serializing boletosList");
-//        try {
-//            FileOutputStream fout = new FileOutputStream("boletosList.dat");
-//            ObjectOutputStream oos = new ObjectOutputStream(fout);
-//            oos.writeObject(boletosList);
-//            oos.close();
-//            }
-//         catch (Exception e) { e.printStackTrace(); }
-//
-//        // unserialize the Queue
-//        System.out.println("unserializing boletosList");
-//        try {
-//         FileInputStream fin = new FileInputStream("boletosList.dat");
-//         ObjectInputStream ois = new ObjectInputStream(fin);
-//         boletosList = (Boletos) ois.readObject();
-//         ois.close();
-//         }
-//        catch (Exception e) { e.printStackTrace(); }
-//
-//        System.out.println(boletosList.toString());
