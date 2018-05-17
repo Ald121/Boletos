@@ -42,7 +42,7 @@ public class Data extends Vector {
         return elementAt(index);
     }
     
-    void setRowAt(Object objSet,int index) {
+    void updateRowAt(Object objSet,int index) {
         setElementAt(objSet, index);
     }
 

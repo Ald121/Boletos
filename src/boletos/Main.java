@@ -15,11 +15,11 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-//        LoginFrm lFrm = new LoginFrm();
-//        lFrm.setVisible(true);
-
-    HomeFrm hFrm = new HomeFrm();
-    hFrm.setVisible(true);
+        LoginFrm lFrm = new LoginFrm();
+        lFrm.setVisible(true);
+//
+//    HomeFrm hFrm = new HomeFrm();
+//    hFrm.setVisible(true);
     }
     
 }

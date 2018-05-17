@@ -49,6 +49,7 @@ public class HomeFrm extends javax.swing.JFrame {
     String[] horarios = new String[2];
     Object typePassanger;
     String[] boletosList;
+    int selectedRowToEdit = -1;
 
     /**
      * Creates new form HomeFrm
@@ -79,7 +80,6 @@ public class HomeFrm extends javax.swing.JFrame {
             _data_Boletos = (Data) ois.readObject();
             ois.close();
         } catch (Exception eBoletos) {
-            System.out.println(eBoletos);
             try {
                 FileOutputStream fout = new FileOutputStream("boletos.txt");
                 ObjectOutputStream oos = new ObjectOutputStream(fout);
@@ -133,6 +133,24 @@ public class HomeFrm extends javax.swing.JFrame {
             costoViaje = costoViaje - (double) (costoViaje * 0.10);
         }
         return costoViaje;
+    }
+
+    public void clearAll() {
+        int aucCoutn = count;
+        btnNuevo.setVisible(false);
+        btnSave.setVisible(true);
+        btnUpdate.setVisible(false);
+        for (int i = 0; i <= aucCoutn; i++) {
+            removeAsiento(i);
+        }
+        count = -1;
+        txtCosto.setText("0.00");
+        txtEdad.setText("18");
+        txtNombres.setText("");
+        txtIdentificacion.setText("");
+        cmbRutas.setSelectedIndex(0);
+        cmbType.setSelectedIndex(0);
+        IniBoletosList();
     }
 
     /**
@@ -339,6 +357,14 @@ public class HomeFrm extends javax.swing.JFrame {
             }
         });
 
+        btnNuevo.setBackground(new java.awt.Color(51, 255, 51));
+        btnNuevo.setText("Cancelar");
+        btnNuevo.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnNuevoMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelViajeLayout = new javax.swing.GroupLayout(panelViaje);
         panelViaje.setLayout(panelViajeLayout);
         panelViajeLayout.setHorizontalGroup(
@@ -346,7 +372,9 @@ public class HomeFrm extends javax.swing.JFrame {
             .addGroup(panelViajeLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelViajeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panelAsientosList, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(panelViajeLayout.createSequentialGroup()
+                        .addComponent(panelAsientosList, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(181, 181, 181))
                     .addGroup(panelViajeLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jLabel10)
@@ -355,7 +383,9 @@ public class HomeFrm extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btnUpdate)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnNuevo))
                     .addGroup(panelViajeLayout.createSequentialGroup()
                         .addGroup(panelViajeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(btnAddAsientos, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -377,8 +407,7 @@ public class HomeFrm extends javax.swing.JFrame {
                                 .addGroup(panelViajeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel9)
                                     .addComponent(cmbHorario, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(0, 115, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addContainerGap(125, Short.MAX_VALUE))))
         );
         panelViajeLayout.setVerticalGroup(
             panelViajeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -412,26 +441,17 @@ public class HomeFrm extends javax.swing.JFrame {
                     .addComponent(jLabel10)
                     .addComponent(txtCosto)
                     .addComponent(btnSave)
-                    .addComponent(btnUpdate))
+                    .addComponent(btnUpdate)
+                    .addComponent(btnNuevo))
                 .addGap(24, 24, 24))
         );
-
-        btnNuevo.setBackground(new java.awt.Color(51, 255, 51));
-        btnNuevo.setText("Nuevo boleto");
-        btnNuevo.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnNuevoMouseClicked(evt);
-            }
-        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(11, 11, 11)
-                .addComponent(btnNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(97, 97, 97)
+                .addGap(273, 273, 273)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
@@ -445,9 +465,7 @@ public class HomeFrm extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnNuevo))
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -651,7 +669,8 @@ public class HomeFrm extends javax.swing.JFrame {
                 String[] boletoData;
                 for (int i = 0; i < boletosList.length; i++) {
                     boletoData = boletosList[i].split(":");
-                    dataAsiento = boletoData[5].split("-");
+                    dataAsiento = boletoData[7].split("-");
+                    System.out.println(Arrays.toString(dataAsiento));
                     for (int j = 0; j < dataAsiento.length; j++) {
                         if (dataAsiento[j].equals(value)) {
                             paint = true;
@@ -695,7 +714,7 @@ public class HomeFrm extends javax.swing.JFrame {
     private void loadTableVendidos(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_loadTableVendidos
         DefaultTableModel dtm = new DefaultTableModel(0, 0);
         // add header of the table
-        String header[] = new String[]{"#","Nombre", "Tipo", "Ruta", "Hora", "Costo", "Asiento", "Distribucion", "Fecha"};
+        String header[] = new String[]{"#", "Nombre", "Tipo", "Ruta", "Hora", "Costo", "Asiento", "Distribucion", "Fecha"};
         // add header in table model     
         dtm.setColumnIdentifiers(header);
         //set model into the table object
@@ -704,7 +723,7 @@ public class HomeFrm extends javax.swing.JFrame {
         for (int count = 0; count < boletosList.length; count++) {
             String[] dataBoleto = boletosList[count].split(":");
             if (boletosList[count].length() > 5) {
-               dtm.addRow(new Object[]{dataBoleto[0],dataBoleto[1], dataBoleto[2], dataBoleto[4], dataBoleto[5], dataBoleto[6], dataBoleto[7], dataBoleto[8], dataBoleto[9]});
+                dtm.addRow(new Object[]{dataBoleto[0], dataBoleto[1], dataBoleto[2], dataBoleto[4], dataBoleto[5], dataBoleto[6], dataBoleto[7], dataBoleto[8], dataBoleto[9]});
             }
         }
     }//GEN-LAST:event_loadTableVendidos
@@ -772,7 +791,7 @@ public class HomeFrm extends javax.swing.JFrame {
         if (allOk) {
             Boleto _boleto = null;
             Pasajero pb;
-            pb = new Pasajero(txtNombres.getText(), typePassanger.toString(),txtIdentificacion.getText(),txtEdad.getText());
+            pb = new Pasajero(txtNombres.getText(), typePassanger.toString(), txtIdentificacion.getText(), txtEdad.getText());
             Ruta rt;
             rt = new Ruta(cmbRutas.getSelectedItem().toString(), cmbHorario.getSelectedItem().toString());
             String fechaB = cmbDia.getSelectedItem() + "-" + cmbMes.getSelectedItem() + "-" + cmbAnio.getSelectedItem();
@@ -787,9 +806,11 @@ public class HomeFrm extends javax.swing.JFrame {
                 eU.printStackTrace();
             }
             JOptionPane.showMessageDialog(null, "Asiento guardado correctamente");
-            for (int i = 0; i <= count; i++) {
+            int aucCoutn = count;
+            for (int i = 0; i <= aucCoutn; i++) {
                 removeAsiento(i);
             }
+            count = -1;
             txtCosto.setText("0.00");
             txtEdad.setText("18");
             txtNombres.setText("");
@@ -849,32 +870,122 @@ public class HomeFrm extends javax.swing.JFrame {
     }//GEN-LAST:event_addrowActionPerformed
 
     private void updateSave(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateSave
+        clearAll();
         int row = tblVendidos.getSelectedRow();
-        System.out.println(boletosList[row].toString());
+        selectedRowToEdit = row;
+        if (row == -1) {
+            JOptionPane.showMessageDialog(null, "Selecione una fila para editar");
+            return;
+        }
         String[] dataBoletoupdate = boletosList[row].split(":");
         String[] dataUpdate = new String[tblVendidos.getColumnCount()];
         for (int i = 0; i < tblVendidos.getColumnCount(); i++) {
             String resul = tblVendidos.getValueAt(row, i).toString();
             dataUpdate[i] = resul;
         }
-        txtNombres.setText(dataUpdate[0]);
+        txtIdentificacion.setText(dataBoletoupdate[0]);
+        txtNombres.setText(dataUpdate[1]);
         txtEdad.setText(dataBoletoupdate[3]);
+        txtCosto.setText(dataBoletoupdate[6].replace(".", ","));
         for (int i = 0; i < cmbType.getItemCount(); i++) {
             if (cmbType.getItemAt(i).toString().equals(dataUpdate[2])) {
                 cmbType.setSelectedIndex(i);
                 break;
             }
         }
+        String[] dataFecha = dataBoletoupdate[9].split("-");
+        for (int i = 0; i < cmbDia.getItemCount(); i++) {
+            if (cmbDia.getItemAt(i).equals(dataFecha[0])) {
+                cmbDia.setSelectedIndex(i);
+                break;
+            }
+        }
+        for (int i = 0; i < cmbMes.getItemCount(); i++) {
+            if (cmbMes.getItemAt(i).equals(dataFecha[1])) {
+                cmbMes.setSelectedIndex(i);
+                break;
+            }
+        }
+        for (int i = 0; i < cmbAnio.getItemCount(); i++) {
+            if (cmbAnio.getItemAt(i).equals(dataFecha[2])) {
+                cmbAnio.setSelectedIndex(i);
+                break;
+            }
+        }
+        for (int i = 0; i < cmbRutas.getItemCount(); i++) {
+            if (cmbRutas.getItemAt(i).equals(dataBoletoupdate[4])) {
+                cmbRutas.setSelectedIndex(i);
+                break;
+            }
+        }
+        for (int i = 0; i < cmbHorario.getItemCount(); i++) {
+            if (cmbHorario.getItemAt(i).equals(dataBoletoupdate[5])) {
+                cmbHorario.setSelectedIndex(i);
+                break;
+            }
+        }
+        String[] arrayAsientos = dataBoletoupdate[7].split("-");
+        String[] arrayAsientosDetail = dataBoletoupdate[8].split("->");
+        for (int i = 0; i < arrayAsientos.length; i++) {
+            String asientoNum = arrayAsientos[i];
+            String asientoPosition = arrayAsientosDetail[i + 1];
+            asientoPosition = asientoPosition.substring(0, 7);
+            count = i;
+            lblAsientos[count] = new JLabel("Numero de asiento ->");
+            txtAsiento[count] = new JTextField();
+            txtAsiento[count].setText(asientoNum);
+            txtAsiento[count].addKeyListener(new KeyAdapter() {
+                @Override
+                public void keyReleased(KeyEvent e) {
+                    char c = e.getKeyChar();
+                    if (txtAsiento[count].getText().length() > 2) {
+                        txtAsiento[count].setText("");
+                    }
+                    if (!((c >= '0') && (c <= '9')
+                            || (c == KeyEvent.VK_BACK_SPACE)
+                            || (c == KeyEvent.VK_DELETE))) {
+                        txtAsiento[count].setText("");
+                    }
+                }
+
+                @Override
+                public void keyTyped(KeyEvent e) {
+                }
+
+                @Override
+                public void keyPressed(KeyEvent e) {
+                }
+            });
+            btnAsientosRemove[count] = new JButton();
+            btnAsientosRemove[count].setText("X");
+            btnAsientosRemove[count].addActionListener((ActionEvent e) -> {
+                removeAsiento(count);
+            });
+            cmbAsientosType[count] = new JComboBox(typeList);
+            for (int j = 0; j < cmbAsientosType[count].getItemCount(); j++) {
+                if (cmbAsientosType[count].getItemAt(j).equals(asientoPosition)) {
+                    cmbAsientosType[count].setSelectedIndex(j);
+                    break;
+                }
+            }
+            panelAsientosList.setLayout(new GridLayout(0, 4, 20, 20));
+            panelAsientosList.add(cmbAsientosType[count]);
+            panelAsientosList.add(lblAsientos[count]);
+            panelAsientosList.add(txtAsiento[count]);
+            panelAsientosList.add(btnAsientosRemove[count]);
+            panelAsientosList.revalidate();
+            panelAsientosList.repaint();
+        }
         btnNuevo.setVisible(true);
         btnSave.setVisible(false);
         btnUpdate.setVisible(true);
         PaneReporte.setSelectedIndex(0);
     }//GEN-LAST:event_updateSave
- public void updateTableVendidos(){
-      IniBoletosList();
-      DefaultTableModel dtm = new DefaultTableModel(0, 0);
+    public void updateTableVendidos() {
+        IniBoletosList();
+        DefaultTableModel dtm = new DefaultTableModel(0, 0);
         // add header of the table
-        String header[] = new String[]{"#","Nombre", "Tipo", "Ruta", "Hora", "Costo", "Asiento", "Distribucion", "Fecha"};
+        String header[] = new String[]{"#", "Nombre", "Tipo", "Ruta", "Hora", "Costo", "Asiento", "Distribucion", "Fecha"};
         // add header in table model     
         dtm.setColumnIdentifiers(header);
         //set model into the table object
@@ -883,10 +994,11 @@ public class HomeFrm extends javax.swing.JFrame {
         for (int count = 0; count < boletosList.length; count++) {
             String[] dataBoleto = boletosList[count].split(":");
             if (boletosList[count].length() > 5) {
-               dtm.addRow(new Object[]{dataBoleto[0],dataBoleto[1], dataBoleto[2], dataBoleto[4], dataBoleto[5], dataBoleto[6], dataBoleto[7], dataBoleto[8], dataBoleto[9]});
+                dtm.addRow(new Object[]{dataBoleto[0], dataBoleto[1], dataBoleto[2], dataBoleto[4], dataBoleto[5], dataBoleto[6], dataBoleto[7], dataBoleto[8], dataBoleto[9]});
             }
         }
- }
+    }
+
     private void deleteBoleto(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBoleto
         int row = tblVendidos.getSelectedRow();
         boolean deleteRow = _data_Boletos.removeRowAt(_data_Boletos.getAt(row));
@@ -905,11 +1017,76 @@ public class HomeFrm extends javax.swing.JFrame {
     }//GEN-LAST:event_deleteBoleto
 
     private void btnNuevoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnNuevoMouseClicked
-        System.out.println("nuevo boleto");
+        clearAll();
     }//GEN-LAST:event_btnNuevoMouseClicked
 
     private void btnUpdateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnUpdateMouseClicked
-        System.out.println("actualizar");
+        Boolean allOk = true;
+        if (txtIdentificacion.getText().isEmpty() || txtNombres.getText().isEmpty() || txtEdad.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Algunos campos estan vacios");
+            allOk = false;
+            return;
+        }
+        if (count == -1) {
+            JOptionPane.showMessageDialog(null, "Agregue por lo menos un asiento");
+            allOk = false;
+            return;
+        }
+        String asientos = "";
+        String distribucion = "";
+        for (int i = 0; i <= count; i++) {
+            if (existAsiento(txtAsiento[i].getText())) {
+                JOptionPane.showMessageDialog(null, "El numero de asiento " + txtAsiento[i].getText() + " ya esta assignado");
+                allOk = false;
+                break;
+            }
+            if (Integer.parseInt(txtAsiento[i].getText()) > 40) {
+                JOptionPane.showMessageDialog(null, "El numero de asiento " + txtAsiento[i].getText() + " no existe");
+                allOk = false;
+                break;
+            }
+            if (txtAsiento[i].getText().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Ingrese el numero de asiento");
+                allOk = false;
+                break;
+            }
+            int numIAsiento = Integer.parseInt(txtAsiento[i].getText());
+            if (typePassanger.equals("Normal") && (numIAsiento >= 1 && numIAsiento <= 10)) {
+                JOptionPane.showMessageDialog(null, "Los asientos del 1-10 unicamente pueden ser asignados a clientes VIP");
+                allOk = false;
+                break;
+            }
+            if (i < count) {
+                distribucion = distribucion + txtAsiento[i].getText() + "->" + cmbAsientosType[i].getSelectedItem() + "|";
+                asientos = asientos + txtAsiento[i].getText() + "-";
+            } else {
+                distribucion = distribucion + txtAsiento[i].getText() + "->" + cmbAsientosType[i].getSelectedItem();
+                asientos = asientos + txtAsiento[i].getText();
+            }
+
+        }
+        if (allOk) {
+            Boleto _boleto = null;
+            Pasajero pb;
+            pb = new Pasajero(txtNombres.getText(), typePassanger.toString(), txtIdentificacion.getText(), txtEdad.getText());
+            Ruta rt;
+            rt = new Ruta(cmbRutas.getSelectedItem().toString(), cmbHorario.getSelectedItem().toString());
+            String fechaB = cmbDia.getSelectedItem() + "-" + cmbMes.getSelectedItem() + "-" + cmbAnio.getSelectedItem();
+            _boleto = new Boleto(pb.toString(), rt.toString(), txtCosto.getText().replace(",", "."), asientos, distribucion, fechaB);
+            _data_Boletos.updateRowAt(_boleto, selectedRowToEdit);
+            try {
+                FileOutputStream foutBoletos = new FileOutputStream("boletos.txt");
+                ObjectOutputStream oosBoletos = new ObjectOutputStream(foutBoletos);
+                oosBoletos.writeObject(_data_Boletos);
+                oosBoletos.close();
+            } catch (IOException eU) {
+                eU.printStackTrace();
+            }
+            JOptionPane.showMessageDialog(null, "Asiento editado correctamente");
+            clearAll();
+            change_color(tblAsientos);
+        };
+
     }//GEN-LAST:event_btnUpdateMouseClicked
 
     /**
@@ -994,6 +1171,4 @@ public class HomeFrm extends javax.swing.JFrame {
     private javax.swing.JTextField txtNombres;
     // End of variables declaration//GEN-END:variables
 
-    
-    
 }
